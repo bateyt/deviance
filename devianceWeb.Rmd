@@ -5,7 +5,7 @@ date: "October 25, 2016"
 output: html_document
 ---
 
-```{r, echo=FALSE, message=FALSE, results="hide", error=FALSE}
+```{r, echo=FALSE, message=FALSE, results="hide", error=FALSE, warning=FALSE}
 library(ggplot2); library(dplyr); library(googlesheets); library(scales)
 
 ## Authorize the googlsheets package
@@ -42,3 +42,12 @@ knitr::kable(gender.counts_df)
 gender.age <- ggplot(deviance_df, aes(x=age, fill=gender)) + theme_bw()
 gender.age + geom_bar(position="dodge")
 ```
+
+```{r, echo=FALSE}
+deviance_df2 <- group_by(deviance_df, age, gender) %>%
+  summarise(count = n()) %>%
+  mutate(perc=count/sum(count))
+
+ggplot(deviance_df2, aes(x=age, y=perc, fill=gender)) + geom_bar(position = "identity", alpha=0.8) + theme_bw() + labs(x="Age", y="Percent")
+
+deviant <- ddply(d)
