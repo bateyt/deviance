@@ -1,0 +1,40 @@
+The Deviance Patterns of Sociology Students
+========================================================
+author: SOC& 101
+date: Lower Columbia College
+autosize: true
+
+The Sample
+========================================================
+
+```{r, echo=FALSE, message=FALSE, results="hide", error=FALSE}
+library(ggplot2); library(dplyr); library(googlesheets); library(scales)
+
+## Authorize the googlsheets package
+gs_auth()
+
+## Check Google Sheets user and authentication (auth) status
+gs_user()
+
+## List my Google sheets
+mysheets <- gs_ls()
+
+## Grab the sheet 'deviance'
+deviance <- gs_title('deviance')
+
+## Read in as a dataframe (also as 'tbl_df' and 'tbl')
+deviance_df <- gs_read(deviance)
+```
+
+
+Our sample contains twice as many females as males.
+
+```{r, echo=FALSE, results='hide'}
+gender.counts <- table(deviance_df$gender)
+gender.counts_df <- as.data.frame(gender.counts)
+gender.counts_df <- dplyr::rename(gender.counts_df, Gender=Var1, Frequency=Freq)
+```
+
+```{r, echo=FALSE}
+knitr::kable(gender.counts_df)
+```
