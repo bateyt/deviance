@@ -26,28 +26,115 @@ deviance_df <- gs_read(deviance)
 
 # What can we say about our sample?
 
-Our sample contains twice as many females as males.
-
-```{r, echo=FALSE, results='hide'}
-gender.counts <- table(deviance_df$gender)
-gender.counts_df <- as.data.frame(gender.counts)
-gender.counts_df <- dplyr::rename(gender.counts_df, Gender=Var1, Frequency=Freq)
-```
-
-```{r, echo=FALSE}
-knitr::kable(gender.counts_df)
-```
-
-```{r, echo=FALSE}
-gender.age <- ggplot(deviance_df, aes(x=age, fill=gender)) + theme_bw()
-gender.age + geom_bar(position="dodge")
-```
-
 ```{r, echo=FALSE}
 deviance_df2 <- group_by(deviance_df, age, gender) %>%
   summarise(count = n()) %>%
   mutate(perc=count/sum(count))
+```
 
-ggplot(deviance_df2, aes(x=age, y=perc, fill=gender)) + geom_bar(position = "identity", alpha=0.8) + theme_bw() + labs(x="Age", y="Percent")
+Our sample contains twice as many females as males.
 
-deviant <- ddply(d)
+```{r, echo=FALSE, results='asis'}
+knitr::kable(deviance_df2, caption = "Responses by Age Cateory & Gender")
+```
+
+```{r, echo=FALSE}
+ggplot(deviance_df2, aes(x=age, y=perc*100, fill=gender)) + geom_bar(stat="identity", alpha=0.8) + theme_bw() + labs(x="Age", y="Percent")
+```
+
+That's okay. We'll deal in relative proportions.
+
+## How often have you intentionally skipped school?
+
+```{r, echo=FALSE}
+skip <- group_by(deviance_df, age, gender, skip.school) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+ggplot(skip, aes(x=skip.school, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Skipped School", y="Percent") + facet_grid(.~age)
+```
+
+----
+
+## How many times have you intentionally ran away from home?
+```{r, echo=FALSE}
+skip <- group_by(deviance_df, age, gender, ran.away) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+ggplot(skip, aes(x=ran.away, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Ran Away", y="Percent") + facet_grid(.~age)
+```
+
+----
+
+## How many times have you intentionally driven without a license?
+```{r, echo=FALSE}
+skip <- group_by(deviance_df, age, gender, drive.no.lic) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+ggplot(skip, aes(x=drive.no.lic, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Driven w/o License", y="Percent") + facet_grid(.~age)
+```
+
+----
+
+## How many times have you intentionally driven while impaired?
+```{r, echo=FALSE}
+skip <- group_by(deviance_df, age, gender, drive.impaired) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+ggplot(skip, aes(x=drive.impaired, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Driven While Impaired", y="Percent") + facet_grid(.~age)
+```
+
+----
+
+## How many times have you been on probation/expelled?
+```{r, echo=FALSE}
+skip <- group_by(deviance_df, age, gender, probation.expelled) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+ggplot(skip, aes(x=probation.expelled, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times on Probation/Expelled", y="Percent") + facet_grid(.~age)
+```
+
+---
+
+## How many times have you defied your parents?
+```{r, echo=FALSE}
+skip <- group_by(deviance_df, age, gender, defy.parents) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+ggplot(skip, aes(x=defy.parents, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Defying Parents", y="Percent") + facet_grid(.~age)
+```
+
+---
+
+## How many times have stolen anything (value less than 2 dollars)?
+```{r, echo=FALSE}
+skip <- group_by(deviance_df, age, gender, stole.2dollars) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+ggplot(skip, aes(x=stole.2dollars, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Stolen (value < $2)", y="Percent") + facet_grid(.~age)
+```
+
+---
+
+## How many times have stolen anything (value more than 50 dollars)?
+```{r, echo=FALSE}
+skip <- group_by(deviance_df, age, gender, stole.over50) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+ggplot(skip, aes(x=stole.over50, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Stolen (value > $50)", y="Percent") + facet_grid(.~age)
+```
