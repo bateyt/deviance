@@ -1,8 +1,8 @@
 ---
 title: "Deviance Patterns of Sociology Students"
-author: "SOC& 101"
-date: "October 25, 2016"
-output: html_document
+output: 
+  html_document: 
+    theme: readable
 ---
 
 ```{r, echo=FALSE, message=FALSE, results="hide", error=FALSE, warning=FALSE}
@@ -93,6 +93,18 @@ ggplot(skip, aes(x=drive.impaired, y=percent*100, fill=gender)) + geom_bar(stat=
 
 ----
 
+## How many times have you driven faster than speed limit?
+```{r, echo=FALSE}
+skip <- group_by(deviance_df, age, gender, drive.fast) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+ggplot(skip, aes(x=drive.fast, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Cheated", y="Percent") + facet_grid(.~age)
+```
+
+----
+
 ## How many times have you been on probation/expelled?
 ```{r, echo=FALSE}
 skip <- group_by(deviance_df, age, gender, probation.expelled) %>%
@@ -138,3 +150,140 @@ skip <- group_by(deviance_df, age, gender, stole.over50) %>%
 
 ggplot(skip, aes(x=stole.over50, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Stolen (value > $50)", y="Percent") + facet_grid(.~age)
 ```
+
+----
+
+## How many times have you used alcohol/drugs?
+```{r, echo=FALSE}
+skip <- group_by(deviance_df, age, gender, drank.alcohol) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+a <- ggplot(skip, aes(x=drank.alcohol, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Drank Alcohol", y="Percent") + facet_grid(.~age)
+
+####
+
+skip <- group_by(deviance_df, age, gender, marijauna) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+b <- ggplot(skip, aes(x=marijauna, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Smoked Marijuana", y="Percent") + facet_grid(.~age)
+
+####
+
+skip <- group_by(deviance_df, age, gender, amphetamines) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+c <- ggplot(skip, aes(x=amphetamines, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Used Amphetamines", y="Percent") + facet_grid(.~age)
+
+####
+
+skip <- group_by(deviance_df, age, gender, cocaine) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+d <- ggplot(skip, aes(x=cocaine, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Used Cocaine", y="Percent") + facet_grid(.~age)
+
+####
+
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+
+## Plot all four drugs/alcohol:
+
+multiplot(a, b, c, d, cols=2)
+```
+
+
+----
+
+## How many times have you cheated on an exam or class assignment?
+```{r, echo=FALSE}
+skip <- group_by(deviance_df, age, gender, cheat.exam) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+ggplot(skip, aes(x=cheat.exam, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Times Cheated", y="Percent") + facet_grid(.~age)
+```
+
+----
+
+## Let's talk about sex, baby.
+```{r, echo=FALSE}
+skip <- group_by(deviance_df, age, gender, hetero.not.married) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+a <- ggplot(skip, aes(x=hetero.not.married, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Heterosexual Relations Outside Marriage", y="Percent") + facet_grid(.~age)
+
+####
+
+skip <- group_by(deviance_df, age, gender, same.sex) %>%
+  summarise(count = n()) %>%
+  mutate(percent = count/sum(count)) %>%
+  ungroup()
+
+b <- ggplot(skip, aes(x=same.sex, y=percent*100, fill=gender)) + geom_bar(stat="identity", position="dodge", alpha=0.8) + theme_bw() + labs(x="Same Sex Relations", y="Percent") + facet_grid(.~age)
+
+multiplot(a, b, cols = 2)
+```
+
+<br>
+<br>
+
+<CENTER>
+<figure>
+  <img src="https://cowanboswell.wikispaces.com/file/view/sociology___deviance_by_kanmuri_san-d33of4s.png/287646948/359x261/sociology___deviance_by_kanmuri_san-d33of4s.png">
+</figure>
+</CENTER>
