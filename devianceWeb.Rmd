@@ -47,7 +47,6 @@ knitr::kable(deviance_df2, caption = "Responses by age cateory & gender")
 ggplot(deviance_df2, aes(x=age, y=percent, fill=gender)) + geom_bar(stat="identity", alpha=0.8) + theme_bw() + labs(x="Age", y="Percent")
 ```
 
-----
 
 ```{r echo=FALSE, fig.fullwidth = TRUE, fig.height=1.5, fig.cap="Excerpt from deviance questionaire"}
 library(png)
